@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sang.mapper.UserMapper">
+    <select id="loadUserByUsername" resultType="org.sang.pojo.dto.UserDTO">
+        SELECT id, username, password, nickname,phoneNum, enabled, email, userface, regTime, updateTime
+        FROM `user`
+        WHERE username = #{username,jdbcType=VARCHAR}
+    </select>
+
+    <select id="loadUserByPhoneNum" resultType="org.sang.pojo.dto.UserDTO">
+        SELECT id, username, nickname,password, phoneNum, enabled, email, userface, regTime, updateTime
+        FROM `user`
+        WHERE phoneNum = #{phoneNum,jdbcType=BIGINT}
+    </select>
+    <insert id="registerUser" useGeneratedKeys="true" keyProperty="id" parameterType="org.sang.pojo.dto.UserDTO">
+        INSERT INTO user(username, nickname, password, email, userface, regTime,enabled)
+        values(#{username,jdbcType=VARCHAR},#{nickname,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},
+        #{userface,jdbcType=VARCHAR},now(),1)
+    </insert>
+    <update id="updateUserEmail">
+        UPDATE user set email=#{email} WHERE id=#{id}
+    </update>
+    <select id="getUserByNickname" resultMap="BaseResultMap">
+        SELECT u.*,r.`id` AS rid,r.role_name AS roleName FROM user u,roles r,roles_user ru WHERE u.`id`=ru.`uid` AND
+        r.`id`=ru.`rid` AND u.`id` NOT IN(SELECT u.`id` FROM user u,roles_user ru WHERE u.`id`=ru.`uid` AND ru.`rid`=1)
+        <choose>
+            <when test="nickname!=null and nickname!=''">
+                and u.nickname like concat('%',#{nickname},'%') ORDER BY u.`id`
+            </when>
+            <otherwise>
+                ORDER BY u.`id` limit 20
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getUserById" resultMap="BaseResultMap">
+        SELECT u.*,r.`id` AS rid,r.role_name AS rname FROM user u,roles r,roles_user ru WHERE u.`id`=ru.`uid` AND
+        r.`id`=ru.`rid` AND u.`id`=#{id}
+    </select>
+    <resultMap id="BaseResultMap" type="org.sang.pojo.dto.UserDTO">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="nickname" property="nickname"/>
+        <result column="password" property="password"/>
+        <result column="enabled" property="enabled"/>
+        <result column="email" property="email"/>
+        <result column="userface" property="userface"/>
+        <result column="regTime" property="regTime"/>
+    </resultMap>
+
+    <update id="updateUserEnabled">
+        UPDATE user set enabled=#{enabled} WHERE id=#{uid}
+    </update>
+    <delete id="deleteUserById">
+        DELETE FROM user WHERE id=#{id}
+    </delete>
+
+    <select id="queryUserCountsByCondition" resultType="int">
+        select count(*) from user
+        <include refid="userConditionSql" />
+    </select>
+
+    <sql id="userConditionSql">
+        where enabled=1
+        <if test="userParam.username!=null and userParam.username!=''">
+            and  username like  concat('%',#{userParam.username,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="userParam.nickname!=null and userParam.nickname!=''">
+            and  nickname like concat('%',#{userParam.nickname,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="userParam.email!=null and userParam.email!=''">
+            and email like concat('%',#{userParam.email,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="userParam.regStartTime!=null and userParam.regStartTime!=''">
+            and regTime <![CDATA[>=]]> #{userParam.regStartTime}
+        </if>
+        <if test="userParam.regEndTime!=null and userParam.regEndTime!=''">
+            and regTime <![CDATA[<=]]> #{userParam.regEndTime}
+        </if>
+    </sql>
+
+    <select id="queryPageUsersByCondition" resultType="org.sang.pojo.CustomUser">
+        select t.id,t.username,t.nickname,t.enabled,t.email,t.regTime
+        from
+        (select id, username,nickname,enabled,email,regTime
+        from user
+        <include refid="userConditionSql" />
+        ) t limit #{startIndex,jdbcType=INTEGER},#{endIndex,jdbcType=INTEGER}
+    </select>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sang.mapper.RolesMapper">
+    <insert id="addRole" keyProperty="id" useGeneratedKeys="true" parameterType="org.sang.pojo.Role">
+       insert into roles(role_code,role_name,description)
+       values(#{roleCode,jdbcType=VARCHAR},
+              #{roleName,jdbcType=VARCHAR},
+              #{description,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateRole" parameterType="org.sang.pojo.Role">
+        update roles set role_code = #{roleCode,jdbcType=VARCHAR},
+                         role_name = #{roleName,jdbcType=VARCHAR},
+                         description = #{description,jdbcType=VARCHAR}
+        where id = #{id, jdbcType=INTEGER}
+    </update>
+
+    <select id="getAllRoles" resultType="org.sang.pojo.Role">
+        select id, role_code as roleCode,role_name as roleName,description
+        from roles where 1=1
+    </select>
+
+    <insert id="setUserRoles" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO roles_user(rid,uid) VALUES
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (#{roleId,jdbcType=INTEGER},#{uid,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+    <select id="getRolesByUid" parameterType="java.lang.Long" resultType="org.sang.pojo.Role">
+        SELECT r.id,
+               r.role_code as roleCode,
+               r.role_name as roleName
+        FROM roles r
+        where r.id in
+        (select rid
+         from roles_user
+         where uid = #{uid,jdbcType=BIGINT}
+         )
+    </select>
+
+    <select id="getUserNotAllocateRoles" parameterType="java.lang.Long" resultType="org.sang.pojo.Role">
+        SELECT r.id,
+               r.role_code as roleCode,
+               r.role_name as roleName
+        FROM roles r
+        where r.id not in
+        (select rid
+         from roles_user
+         where uid = #{uid,jdbcType=BIGINT}
+         )
+    </select>
+
+    <delete id="deleteUserRolesByUid">
+        DELETE FROM roles_user WHERE uid=#{id}
+    </delete>
+
+    <delete id="delUserRoles">
+        DELETE FROM roles_user where rid
+        in <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+               #{roleId, jdbcType=INTEGER}
+           </foreach>
+        and uid = #{uid, jdbcType=BIGINT}
+    </delete>
+
+    <delete id="delRoleById" parameterType="java.lang.Integer">
+       delete from roles where id = #{roleId, jdbcType=INTEGER}
+    </delete>
+
+    <delete id="delRoleUserByRoleId" parameterType="java.lang.Integer">
+        delete from roles_user where rid=#{roleId,jdbcType=INTEGER}
+    </delete>
+
+</mapper>

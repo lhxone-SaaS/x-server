@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sang.mapper.RoleRouterMapper">
+
+    <insert id="addRoleRouter" useGeneratedKeys="true" keyProperty="id" parameterType="org.sang.pojo.dto.RouterResourceDTO">
+        insert into router_resources(pid, name, title, icon,
+                hidden, level, path, componnet_url, order_no,
+                created_by, created_time, last_updated_by,
+                last_updated_time, keep_alive)
+        values(#{pid,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},
+               #{title,jdbcType=VARCHAR},#{icon,jdbcType=VARCHAR},#{hidden,jdbcType=INTEGER},
+               #{level,jdbcType=INTEGER},#{path,jdbcType=VARCHAR},#{componentUrl,jdbcType=VARCHAR},
+               #{orderNo,jdbcType=INTEGER},#{createdBy,jdbcType=VARCHAR},now(),#{createdBy,jdbcType=VARCHAR},
+               #{lastUpdatedBy,jdbcType=VARCHAR},now(),#{keepAlive,jdbcType=INTEGER})
+    </insert>
+
+    <select id="queryRoutersByRoleId" parameterType="Integer" resultType="org.sang.pojo.dto.RouterResourceDTO">
+        SELECT id,pid,name,title,icon,hidden,level,path,redirect,
+               componnet_url as componentUrl,order_no as orderNo,
+               keep_alive as keepAlive
+        FROM router_resources
+        WHERE id in (
+          select resource_id from role_resources
+          where role_id=#{roleId,jdbcType=INTEGER}
+        )
+        ORDER BY level
+    </select>
+
+    <select id="queryRouteResourceIdsByRoleId" parameterType="Integer" resultType="Integer">
+         select resource_id from role_resources
+          where role_id=#{roleId,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryAllRouterResourceIds" resultType="java.lang.Integer">
+        select id from router_resources where 1=1
+    </select>
+
+    <delete id="delRoleResourceByRoleId" parameterType="java.lang.Integer">
+        delete from role_resources where role_id = #{roleId, jdbcType=INTEGER}
+    </delete>
+
+    <insert id="addRouteIdsForRole" useGeneratedKeys="true">
+        insert into role_resources(role_id,resource_id,created_by,created_time,last_updated_by,last_updated_time)
+        values
+        <foreach collection="param1" item="routeId"  separator=",">
+            (#{param2, jdbcType=INTEGER}, #{routeId, jdbcType=INTEGER}, 'heshengfu', now(), 'heshengfu', now())
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,117 @@
+[
+  {
+    "username": "sang",
+    "nickname":"江南一点雨",
+    "password": "sang123",
+    "email": "sang2021@163.com"
+  },
+  {
+    "username": "zhangsan",
+    "nickname":"张三",
+    "password": "zhangsan123",
+    "email": "zhangsan2021@163.com"
+  },
+  {
+    "username": "heshengfu",
+    "nickname":"程序员阿福",
+    "password": "heshengfu123",
+    "email": "heshengfu2018@163.com"
+  },
+  {
+    "username": "lisi",
+    "nickname":"李四",
+    "password": "lisi123",
+    "email": "lisi1998@163.com"
+  },
+  {
+    "username": "wanwu",
+    "nickname":"王五",
+    "password": "wanwu123",
+    "email": "wanwu1995@163.com"
+  },
+  {
+    "username": "zhaoli",
+    "nickname":"zhaoli",
+    "password": "zhaoli123",
+    "email": "zhaoli1992@163.com"
+  },
+  {
+    "username": "caocao",
+    "nickname":"曹操",
+    "password": "caocao123",
+    "email": "caocao1990@163.com"
+  },
+  {
+    "username": "yuanshao",
+    "nickname":"袁绍",
+    "password": "yuanshao23",
+    "email": "yuanshao1989@163.com"
+  },
+  {
+    "username": "guangyu",
+    "nickname":"关羽",
+    "password": "guangyu123",
+    "email": "guangyu1990@163.com"
+  },
+  {
+    "username": "zhangfei",
+    "nickname":"张飞",
+    "password": "zhangfei123",
+    "email": "zhangfei1991@163.com"
+  },
+  {
+    "username": "zhugeliang",
+    "nickname":"诸葛亮",
+    "password": "zhugeliang",
+    "email": "zhugeliang1992@163.com"
+  },
+  {
+    "username": "liubei",
+    "nickname":"刘备",
+    "password": "liubei123",
+    "email": "liubei1988@163.com"
+  },
+  {
+    "username": "sunquan",
+    "nickname":"孙权",
+    "password": "sunquan123",
+    "email": "sunquan1997@163.com"
+  },
+  {
+    "username": "zhouyu",
+    "nickname":"周瑜",
+    "password": "zhouyu123",
+    "email": "zhouyu1993@163.com"
+  },
+  {
+    "username": "lusu",
+    "nickname":"鲁肃",
+    "password": "lusu123",
+    "email": "lusu1994@163.com"
+  },
+  {
+    "username": "lvbu",
+    "nickname":"吕布",
+    "password": "lvbu123",
+    "email": "lvbu1990@163.com"
+  },
+  {
+    "username": "diaocan",
+    "nickname":"貂蝉",
+    "password": "diaocan123",
+    "email": "diaocan1993@163.com"
+  },
+  {
+    "username": "daqiao",
+    "nickname":"大乔",
+    "password": "daqiao123",
+    "email": "daqiao1992@163.com"
+  },
+  {
+    "username": "xiaoqiao",
+    "nickname":"小乔",
+    "password": "xiaoqiao123",
+    "email": "xiaoqiao1994@163.com"
+  }
+]
+
